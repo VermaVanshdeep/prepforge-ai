@@ -106,7 +106,8 @@ export async function createInterviewAction(rawData: unknown) {
     console.log(`Received ${aiQuestions.length} questions from Gemini.`);
 
     // Create the interview and its questions inside a transaction
-    const interview = await prisma.$transaction(async (tx) => {
+    type TransactionClient = Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">;
+    const interview = await prisma.$transaction(async (tx: TransactionClient) => {
       const interviewRecord = await tx.interview.create({
         data: {
           userId: session.user.id,
