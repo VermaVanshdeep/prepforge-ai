@@ -340,9 +340,9 @@ Expected format:
         throw new Error("Invalid output format: 'questions' array missing.");
       }
 
-      const aiQuestions: AIQuestion[] = parsed.questions.map((q: any) => {
-        const questionText = (q.question || "").toLowerCase();
-        const originalText = q.question || "";
+      const aiQuestions: AIQuestion[] = parsed.questions.map((q: { text: string; category?: string; type?: string; codeTemplate?: string; codeLanguage?: string; testCases?: string[] }) => {
+        const questionText = (q.text || "").toLowerCase();
+        const originalText = q.text || "";
         
         // Final Anti-Hallucination Guardrail
         for (const word of blacklist) {
@@ -369,7 +369,7 @@ Expected format:
         }
 
         return {
-          text: q.question,
+          text: q.text,
           category: q.category,
           type: q.type === "CODING" ? "CODING" : "TEXT",
           codeTemplate: q.codeTemplate,

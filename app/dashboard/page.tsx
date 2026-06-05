@@ -183,14 +183,14 @@ export default async function DashboardPage() {
           resumeMatch,
         }}
         coachData={{
-          latestInterview: latestInterview as any,
+          latestInterview: latestInterview as unknown as React.ComponentProps<typeof AnalyticsView>["coachData"]["latestInterview"],
           latestDurationMins,
-          previousInterview: previousInterview as any,
+          previousInterview: previousInterview as unknown as React.ComponentProps<typeof AnalyticsView>["coachData"]["previousInterview"],
           scoreImprovement,
           mostImprovedSkill,
           weakestOverallSkill,
         }}
-        recentInterviews={recentInterviews as any}
+        recentInterviews={recentInterviews as unknown as React.ComponentProps<typeof AnalyticsView>["recentInterviews"]}
         historicalScores={historicalScores}
         skillData={skillData}
       />

@@ -38,7 +38,7 @@ export default async function InterviewSessionPage({ params }: PageProps) {
 
   return (
     <div className="py-6">
-      <InterviewSession interview={interview} />
+      <InterviewSession interview={interview as unknown as React.ComponentProps<typeof InterviewSession>["interview"]} />
     </div>
   );
 }

@@ -59,9 +59,9 @@ export async function uploadAndAnalyzeResumeAction(rawData: unknown) {
       data: {
         resumeId: resume.id,
         skills: structuredData.skills,
-        experience: structuredData.experience as any,
-        education: structuredData.education as any,
-        projects: structuredData.projects as any,
+        experience: structuredData.experience as never,
+        education: structuredData.education as never,
+        projects: structuredData.projects as never,
         certifications: structuredData.certifications,
         summary: structuredData.summary,
       },
@@ -154,9 +154,9 @@ export async function analyzeATSAction(rawData: unknown) {
     const resumeData: ResumeStructure = {
       skills: resumeAnalysis.skills,
       summary: resumeAnalysis.summary,
-      experience: resumeAnalysis.experience as any,
-      education: resumeAnalysis.education as any,
-      projects: resumeAnalysis.projects as any,
+      experience: resumeAnalysis.experience as never,
+      education: resumeAnalysis.education as never,
+      projects: resumeAnalysis.projects as never,
       certifications: resumeAnalysis.certifications,
     };
 

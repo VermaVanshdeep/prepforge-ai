@@ -77,9 +77,9 @@ export async function createInterviewAction(rawData: unknown) {
           rawText: analysis.resume?.rawText || "",
           skills: analysis.skills,
           summary: analysis.summary,
-          experience: analysis.experience as any,
-          education: analysis.education as any,
-          projects: analysis.projects as any,
+          experience: analysis.experience as ResumeStructure["experience"],
+          education: analysis.education as ResumeStructure["education"],
+          projects: analysis.projects as ResumeStructure["projects"],
           certifications: analysis.certifications,
         };
         console.log("Loaded Resume Data Skills:", resumeData.skills.length > 0 ? "Yes" : "No");
@@ -123,12 +123,12 @@ export async function createInterviewAction(rawData: unknown) {
       const questionsData = aiQuestions.map((q, idx) => ({
         interviewId: interviewRecord.id,
         text: q.text,
-        category: (q as any).category || null,
+        category: (q as { category?: string }).category || null,
         order: idx,
         type: q.type || "TEXT",
         codeTemplate: q.codeTemplate || null,
         codeLanguage: q.codeLanguage || null,
-        testCases: q.testCases ? (q.testCases as any) : null,
+        testCases: q.testCases ? (q.testCases as never) : undefined,
       }));
 
       await tx.question.createMany({
@@ -149,13 +149,13 @@ export async function createInterviewAction(rawData: unknown) {
 
     console.log("========== END createInterviewAction SUCCESS ==========");
     return { success: true, interviewId: interview.id };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("========== CATCH: createInterviewAction FAILED ==========");
     console.error("Stack Trace:");
     console.error(error); // Prints stack trace to terminal
 
     // Return the actual error message to the client
-    const errorMessage = error?.message || "An unknown error occurred during generation.";
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred during generation.";
     return { error: errorMessage };
   }
 }
@@ -206,13 +206,13 @@ export async function submitAnswerAction(rawData: unknown) {
         text,
         codeAnswer: codeAnswer || null,
         duration: duration || null,
-        evaluation: evaluation as any,
+        evaluation: evaluation as never,
       },
       update: {
         text,
         codeAnswer: codeAnswer || null,
         duration: duration || null,
-        evaluation: evaluation as any,
+        evaluation: evaluation as never,
       },
     });
 
@@ -255,7 +255,7 @@ export async function finalizeInterviewAction(interviewId: string) {
 
     const qas = interview.questions.map((q) => {
       const ans = q.answers[0];
-      const evaluation: AnswerEvaluation = (ans?.evaluation as any) || {
+      const evaluation: AnswerEvaluation = (ans?.evaluation as unknown as AnswerEvaluation) || {
         technicalAccuracy: 0,
         communication: 0,
         problemSolving: 0,
@@ -288,7 +288,7 @@ export async function finalizeInterviewAction(interviewId: string) {
         strengths: reportData.strengths,
         weaknesses: reportData.weaknesses,
         recommendations: reportData.recommendations,
-        skillBreakdown: reportData.skillBreakdown as any,
+        skillBreakdown: reportData.skillBreakdown as never,
       },
       update: {
         overallScore: reportData.overallScore,
@@ -296,7 +296,7 @@ export async function finalizeInterviewAction(interviewId: string) {
         strengths: reportData.strengths,
         weaknesses: reportData.weaknesses,
         recommendations: reportData.recommendations,
-        skillBreakdown: reportData.skillBreakdown as any,
+        skillBreakdown: reportData.skillBreakdown as never,
       },
     });
 

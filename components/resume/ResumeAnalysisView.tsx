@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { RadialBarChart, RadialBar, ResponsiveContainer } from "recharts";
 import { analyzeATSAction } from "@/actions/resume";
+import type { ATSAnalysisResult } from "@/lib/gemini";
 
 interface ExperienceItem {
   company: string;
@@ -42,9 +43,9 @@ interface ResumeAnalysisViewProps {
     id: string;
     resumeId: string;
     skills: string[];
-    experience: any;
-    education: any;
-    projects: any;
+    experience: unknown;
+    education: unknown;
+    projects: unknown;
     certifications: string[];
     summary: string;
     resume: {
@@ -60,13 +61,13 @@ export default function ResumeAnalysisView({ analysis }: ResumeAnalysisViewProps
   
   // ATS Result states
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [atsResult, setAtsResult] = useState<any>(null);
+  const [atsResult, setAtsResult] = useState<ATSAnalysisResult | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   
   // Hydration guard for Recharts
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    setIsMounted(true);
+    setTimeout(() => setIsMounted(true), 0);
   }, []);
 
   const experience: ExperienceItem[] = Array.isArray(analysis.experience) ? analysis.experience : [];

@@ -35,7 +35,7 @@ import {
 interface AnswerItem {
   text: string;
   codeAnswer: string | null;
-  evaluation: any;
+  evaluation: { technicalAccuracy?: number; communication?: number; problemSolving?: number; confidence?: number; completeness?: number; relevance?: number; feedback?: string; idealAnswer?: string; };
 }
 
 interface QuestionItem {
@@ -53,7 +53,7 @@ interface ReportItem {
   strengths: string[];
   weaknesses: string[];
   recommendations: string[];
-  skillBreakdown: any;
+  skillBreakdown: Record<string, number>;
   createdAt: Date;
   interview: {
     jobTitle: string;
@@ -75,7 +75,7 @@ export default function ReportsView({ reports }: ReportsViewProps) {
   // Hydration guard for Recharts
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    setIsMounted(true);
+    setTimeout(() => setIsMounted(true), 0);
   }, []);
 
   const selectedReport = reports.find(r => r.id === selectedReportId);
@@ -96,7 +96,7 @@ export default function ReportsView({ reports }: ReportsViewProps) {
         selectedReport.interview.questions.forEach((q) => {
           const ans = q.answers[0];
           if (ans && ans.evaluation) {
-            const ev = ans.evaluation as any;
+            const ev = ans.evaluation as unknown as { technicalAccuracy?: number; communication?: number; problemSolving?: number; confidence?: number; completeness?: number; relevance?: number; feedback?: string; idealAnswer?: string; };
             tech += ev.technicalAccuracy || 0;
             comm += ev.communication || 0;
             prob += ev.problemSolving || 0;
@@ -256,7 +256,7 @@ export default function ReportsView({ reports }: ReportsViewProps) {
               ) : (
                 selectedReport.interview.questions.map((q, index) => {
                   const ans = q.answers[0];
-                  const ev = ans?.evaluation as any;
+                  const ev = ans?.evaluation as unknown as { overallScore?: number; technicalAccuracy?: number; communication?: number; problemSolving?: number; confidence?: number; completeness?: number; relevance?: number; feedback?: string; idealAnswer?: string; };
                   return (
                     <div key={q.id} className="rounded-2xl border border-white/5 bg-[#09090b]/40 backdrop-blur-md overflow-hidden">
                       <div className="bg-white/2 border-b border-white/5 p-5 flex justify-between items-start gap-4">
@@ -381,7 +381,7 @@ export default function ReportsView({ reports }: ReportsViewProps) {
       <div className="rounded-2xl border border-white/5 bg-[#09090b]/40 backdrop-blur-md overflow-hidden">
         {reports.length === 0 ? (
           <div className="p-12 text-center text-slate-500 font-medium italic">
-            You haven't completed any mock interviews yet. Launch one from the Setup tab!
+            You haven&apos;t completed any mock interviews yet. Launch one from the Setup tab!
           </div>
         ) : (
           <div className="divide-y divide-white/5">

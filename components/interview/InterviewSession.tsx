@@ -37,7 +37,7 @@ interface QuestionItem {
   type: string;
   codeTemplate: string | null;
   codeLanguage: string | null;
-  testCases: any;
+  testCases: { input: string; output: string }[];
   answers: AnswerItem[];
 }
 
@@ -85,7 +85,7 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
     return initial;
   });
 
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<{ start: () => void; stop: () => void; abort: () => void } | null>(null);
 
   // Text-To-Speech (TTS) Question Reader
   const speakQuestion = (text: string) => {
@@ -99,10 +99,10 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
   // Read question whenever index changes
   useEffect(() => {
     speakQuestion(currentQuestion.text);
-    setTimeRemaining(180); // Reset timer to 3 mins
-    setConsoleOutput("");
+    setTimeout(() => setTimeRemaining(180), 0); // Reset timer to 3 mins
+    setTimeout(() => setConsoleOutput(""), 0);
     if (currentQuestion.codeLanguage) {
-      setCodeLanguage(currentQuestion.codeLanguage.toLowerCase());
+      setTimeout(() => setCodeLanguage(currentQuestion.codeLanguage!.toLowerCase()), 0);
     }
   }, [currentIdx]);
 
@@ -121,14 +121,25 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
   // Initialize Speech Recognition (STT)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      interface CustomSpeechRecognition {
+        continuous: boolean;
+        interimResults: boolean;
+        lang: string;
+        onresult: ((event: { resultIndex: number; results: { isFinal: boolean; [key: number]: { transcript: string } }[] | any }) => void) | null;
+        onerror: ((e: { error: string }) => void) | null;
+        onend: (() => void) | null;
+        start: () => void;
+        stop: () => void;
+        abort: () => void;
+      }
+      const SpeechRecognition = (window as unknown as { SpeechRecognition: new () => CustomSpeechRecognition; webkitSpeechRecognition: new () => CustomSpeechRecognition }).SpeechRecognition || (window as unknown as { SpeechRecognition: new () => CustomSpeechRecognition; webkitSpeechRecognition: new () => CustomSpeechRecognition }).webkitSpeechRecognition;
       if (SpeechRecognition) {
         const rec = new SpeechRecognition();
         rec.continuous = true;
         rec.interimResults = true;
         rec.lang = "en-US";
 
-        rec.onresult = (event: any) => {
+        rec.onresult = (event: { resultIndex: number; results: { isFinal: boolean; [key: number]: { transcript: string } }[] }) => {
           let interimTranscript = "";
           let finalTranscript = "";
 
@@ -151,7 +162,7 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
           }
         };
 
-        rec.onerror = (e: any) => {
+        rec.onerror = (e: { error: string }) => {
           console.error("Speech recognition error:", e);
           setIsRecording(false);
         };
@@ -307,14 +318,14 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
               const passed = String(result) === String(tc.output);
               if (!passed) allPassed = false;
               logs += `Test Case #${idx + 1}: ${passed ? "PASSED" : "FAILED"}\n  Input: ${tc.input}\n  Expected: ${tc.output}\n  Got: ${result}\n`;
-            } catch (err: any) {
+            } catch (err: unknown) {
               allPassed = false;
-              logs += `Test Case #${idx + 1}: ERROR - ${err.message}\n`;
+              logs += `Test Case #${idx + 1}: ERROR - ${(err instanceof Error ? err.message : "Unknown error")}\n`;
             }
           });
-        } catch (err: any) {
+        } catch (err: unknown) {
           allPassed = false;
-          logs += `Compilation Error: ${err.message}\nMake sure your function is named solve or solution.\n`;
+          logs += `Compilation Error: ${(err instanceof Error ? err.message : "Unknown error")}\nMake sure your function is named solve or solution.\n`;
         }
       } else {
         // Python/C++/Java Simulation

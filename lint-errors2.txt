@@ -1,0 +1,179 @@
+
+> interview-ai@0.1.0 lint
+> eslint
+
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/actions/interview.ts
+  197:11  warning  'answer' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  209:46  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  215:46  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  291:65  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  299:65  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/actions/resume.ts
+   62:61  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+   63:59  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+   64:57  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  157:59  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  158:57  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  159:55  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/app/page.tsx
+  13:3   warning  'Check' is defined but never used                  @typescript-eslint/no-unused-vars
+  14:3   warning  'HelpCircle' is defined but never used             @typescript-eslint/no-unused-vars
+  20:10  warning  'activeFaq' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  20:21  warning  'setActiveFaq' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  63:9   warning  'faqs' is assigned a value but never used          @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/Footer.tsx
+  2:10  warning  'Brain' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/Navbar.tsx
+  6:10  warning  'Brain' is defined but never used  @typescript-eslint/no-unused-vars
+  6:26  warning  'User' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/Sidebar.tsx
+   9:3  warning  'Sparkles' is defined but never used  @typescript-eslint/no-unused-vars
+  16:3  warning  'Brain' is defined but never used     @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/dashboard/AnalyticsView.tsx
+    7:3   warning  'Play' is defined but never used                              @typescript-eslint/no-unused-vars
+   12:3   warning  'Flame' is defined but never used                             @typescript-eslint/no-unused-vars
+   16:3   warning  'Lock' is defined but never used                              @typescript-eslint/no-unused-vars
+   42:10  warning  'formatPercentage' is defined but never used                  @typescript-eslint/no-unused-vars
+   88:59  warning  'recentInterviews' is defined but never used                  @typescript-eslint/no-unused-vars
+  162:9   warning  'estimatedInterviewsTo90' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/interview/InterviewSession.tsx
+  107:6   warning  React Hook useEffect has missing dependencies: 'currentQuestion.codeLanguage', 'currentQuestion.text', and 'speakQuestion'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/exhaustive-deps
+  112:7   error    Error: Cannot access variable before it is declared
+
+`handleAutoNext` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/interview/InterviewSession.tsx:112:7
+  110 |   useEffect(() => {
+  111 |     if (timeRemaining <= 0) {
+> 112 |       handleAutoNext();
+      |       ^^^^^^^^^^^^^^ `handleAutoNext` accessed before it is declared
+  113 |       return;
+  114 |     }
+  115 |     const timer = setInterval(() => {
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/interview/InterviewSession.tsx:214:3
+  212 |   };
+  213 |
+> 214 |   const handleAutoNext = async () => {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 215 |     await handleSaveProgress();
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 216 |     if (currentIdx < interview.questions.length - 1) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 217 |       setCurrentIdx((prev) => prev + 1);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 218 |     } else {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 219 |       handleFinishInterview();
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 220 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 221 |   };
+      | ^^^^^ `handleAutoNext` is declared here
+  222 |
+  223 |   const handleNext = async () => {
+  224 |     await handleSaveProgress();  react-hooks/immutability
+  119:6   warning  React Hook useEffect has a missing dependency: 'handleAutoNext'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+  139:15  warning  'interimTranscript' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  303:24  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/interview/InterviewSetupForm.tsx
+   70:9   warning  'watchResumeId' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   70:25  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/interview/InterviewSetupForm.tsx:70:25
+  68 |   });
+  69 |
+> 70 |   const watchResumeId = watch("resumeId");
+     |                         ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  71 |
+  72 |   const { startUpload } = useUploadThing("resumeUploader", {
+  73 |     onClientUploadComplete: async (res) => {  react-hooks/incompatible-library
+  155:14  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/profile/ProfileView.tsx
+   7:3   warning  'Briefcase' is defined but never used  @typescript-eslint/no-unused-vars
+  72:14  warning  'err' is defined but never used        @typescript-eslint/no-unused-vars
+  88:16  warning  'err' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/reports/ReportsView.tsx
+    5:3   warning  'History' is defined but never used                              @typescript-eslint/no-unused-vars
+    6:3   warning  'Award' is defined but never used                                @typescript-eslint/no-unused-vars
+    7:3   warning  'TrendingUp' is defined but never used                           @typescript-eslint/no-unused-vars
+  384:22  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/resume/ResumeAnalysisView.tsx
+   9:3   warning  'PlusCircle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  10:3   warning  'Briefcase' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  45:17  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+  46:16  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+  47:15  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+  63:46  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+  69:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/components/resume/ResumeAnalysisView.tsx:69:5
+  67 |   const [isMounted, setIsMounted] = useState(false);
+  68 |   useEffect(() => {
+> 69 |     setIsMounted(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  70 |   }, []);
+  71 |
+  72 |   const experience: ExperienceItem[] = Array.isArray(analysis.experience) ? analysis.experience : [];  react-hooks/set-state-in-effect
+  96:14  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+
+/Users/vanshdeep/.gemini/antigravity/AI Mock Interview Platform/lib/gemini.ts
+  170:12  warning  'error' is defined but never used                @typescript-eslint/no-unused-vars
+  211:12  warning  'error' is defined but never used                @typescript-eslint/no-unused-vars
+  323:11  error    'text' is never reassigned. Use 'const' instead  prefer-const
+  444:12  warning  'error' is defined but never used                @typescript-eslint/no-unused-vars
+  506:12  warning  'error' is defined but never used                @typescript-eslint/no-unused-vars
+
+✖ 55 problems (18 errors, 37 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

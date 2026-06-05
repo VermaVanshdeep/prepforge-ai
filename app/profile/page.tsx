@@ -46,7 +46,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="py-6">
-      <ProfileView user={user} resumes={resumes} interviews={interviews as any} />
+      <ProfileView user={user} resumes={resumes} interviews={interviews as unknown as React.ComponentProps<typeof ProfileView>["interviews"]} />
     </div>
   );
 }

@@ -53,7 +53,7 @@ interface RecentInterviewItem {
     summary: string;
     strengths: string[];
     weaknesses: string[];
-    skillBreakdown: any;
+    skillBreakdown: Record<string, number | string | undefined>;
   } | null;
 }
 
@@ -89,7 +89,7 @@ export default function AnalyticsView({ stats, coachData, recentInterviews, hist
   const [isMounted, setIsMounted] = useState(false);
   
   useEffect(() => {
-    setIsMounted(true);
+    setTimeout(() => setIsMounted(true), 0);
   }, []);
 
   if (!isMounted) {

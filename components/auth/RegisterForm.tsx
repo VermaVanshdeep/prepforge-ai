@@ -52,8 +52,8 @@ export function RegisterForm() {
           router.refresh();
         }
       }
-    } catch (err: any) {
-      if (err.message === "NEXT_REDIRECT" || err.name === "RedirectError") {
+    } catch (err: unknown) {
+      if ((err instanceof Error ? err.message : "Unknown error") === "NEXT_REDIRECT" || (err instanceof Error && err.name === "RedirectError")) {
         return;
       }
       console.error("Registration submission error:", err);

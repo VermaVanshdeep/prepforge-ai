@@ -40,10 +40,10 @@ export function LoginForm() {
         router.push("/dashboard");
         router.refresh();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // In Next.js App Router, redirects work by throwing a special error.
       // If the error is a redirect error, we let it flow naturally.
-      if (err.message === "NEXT_REDIRECT" || err.name === "RedirectError") {
+      if ((err instanceof Error ? err.message : "Unknown error") === "NEXT_REDIRECT" || (err instanceof Error && err.name === "RedirectError")) {
         return;
       }
       console.error("Login submission error:", err);

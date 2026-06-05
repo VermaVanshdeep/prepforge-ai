@@ -43,7 +43,7 @@ export default async function ReportsPage() {
 
   return (
     <div className="py-6">
-      <ReportsView reports={reports as any} />
+      <ReportsView reports={reports as unknown as React.ComponentProps<typeof ReportsView>["reports"]} />
     </div>
   );
 }
