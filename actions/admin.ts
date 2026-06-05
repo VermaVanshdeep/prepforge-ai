@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
 
 export interface AdminMetrics {
@@ -54,7 +55,7 @@ export async function getAdminMetrics(): Promise<{ error?: string; metrics?: Adm
       },
     });
 
-    const recentActivity = usages.map((u) => ({
+    const recentActivity = usages.map((u: any) => ({
       id: u.id,
       type: u.type,
       userName: u.user.name,
