@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
     // Silence the "multiple lockfiles" workspace root detection warning
     root: path.resolve(__dirname),
   },
+  // Keep these packages as native Node.js modules — don't bundle them
+  serverExternalPackages: ["pdf-parse", "groq-sdk"],
 };
 
 export default nextConfig;
-

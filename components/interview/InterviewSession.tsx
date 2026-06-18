@@ -96,6 +96,80 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
     }
   };
 
+  const handleSaveProgress = async () => {
+    setIsSaving(true);
+    setSaveSuccess(false);
+    const data = answersMap[currentQuestion.id];
+    
+    try {
+      const res = await submitAnswerAction({
+        interviewId: interview.id,
+        questionId: currentQuestion.id,
+        text: data?.text || "",
+        codeAnswer: currentQuestion.type === "CODING" ? data?.codeAnswer : undefined,
+        duration: 180 - timeRemaining,
+      });
+
+      if (res.success) {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 2000);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleFinishInterview = async () => {
+    setIsEvaluating(true);
+    try {
+      // Save current question response first
+      await submitAnswerAction({
+        interviewId: interview.id,
+        questionId: currentQuestion.id,
+        text: answersMap[currentQuestion.id]?.text || "",
+        codeAnswer: currentQuestion.type === "CODING" ? answersMap[currentQuestion.id]?.codeAnswer : undefined,
+        duration: 180 - timeRemaining,
+      });
+
+      // Finalize the whole interview
+      const res = await finalizeInterviewAction(interview.id);
+      if (res.success) {
+        router.push("/reports");
+      } else {
+        alert(res.error || "Failed to finalize report.");
+        setIsEvaluating(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setIsEvaluating(false);
+    }
+  };
+
+  const handleAutoNext = async () => {
+    await handleSaveProgress();
+    if (currentIdx < interview.questions.length - 1) {
+      setCurrentIdx((prev) => prev + 1);
+    } else {
+      handleFinishInterview();
+    }
+  };
+
+  const handleNext = async () => {
+    await handleSaveProgress();
+    if (currentIdx < interview.questions.length - 1) {
+      setCurrentIdx((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentIdx > 0) {
+      setCurrentIdx((prev) => prev - 1);
+    }
+  };
+
+
   // Read question whenever index changes
   useEffect(() => {
     speakQuestion(currentQuestion.text);
@@ -109,13 +183,16 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
   // Question Timer Loop
   useEffect(() => {
     if (timeRemaining <= 0) {
-      handleAutoNext();
+      setTimeout(() => {
+        handleAutoNext();
+      }, 0);
       return;
     }
     const timer = setInterval(() => {
       setTimeRemaining((prev) => prev - 1);
     }, 1000);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRemaining]);
 
   // Initialize Speech Recognition (STT)
@@ -125,7 +202,8 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
         continuous: boolean;
         interimResults: boolean;
         lang: string;
-        onresult: ((event: { resultIndex: number; results: { isFinal: boolean; [key: number]: { transcript: string } }[] | any }) => void) | null;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onresult: ((event: { resultIndex: number; results: any }) => void) | null;
         onerror: ((e: { error: string }) => void) | null;
         onend: (() => void) | null;
         start: () => void;
@@ -194,79 +272,6 @@ export default function InterviewSession({ interview }: InterviewSessionProps) {
     } else {
       setIsRecording(true);
       recognitionRef.current.start();
-    }
-  };
-
-  const handleSaveProgress = async () => {
-    setIsSaving(true);
-    setSaveSuccess(false);
-    const data = answersMap[currentQuestion.id];
-    
-    try {
-      const res = await submitAnswerAction({
-        interviewId: interview.id,
-        questionId: currentQuestion.id,
-        text: data?.text || "",
-        codeAnswer: currentQuestion.type === "CODING" ? data?.codeAnswer : undefined,
-        duration: 180 - timeRemaining,
-      });
-
-      if (res.success) {
-        setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 2000);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleAutoNext = async () => {
-    await handleSaveProgress();
-    if (currentIdx < interview.questions.length - 1) {
-      setCurrentIdx((prev) => prev + 1);
-    } else {
-      handleFinishInterview();
-    }
-  };
-
-  const handleNext = async () => {
-    await handleSaveProgress();
-    if (currentIdx < interview.questions.length - 1) {
-      setCurrentIdx((prev) => prev + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIdx > 0) {
-      setCurrentIdx((prev) => prev - 1);
-    }
-  };
-
-  const handleFinishInterview = async () => {
-    setIsEvaluating(true);
-    try {
-      // Save current question response first
-      await submitAnswerAction({
-        interviewId: interview.id,
-        questionId: currentQuestion.id,
-        text: answersMap[currentQuestion.id]?.text || "",
-        codeAnswer: currentQuestion.type === "CODING" ? answersMap[currentQuestion.id]?.codeAnswer : undefined,
-        duration: 180 - timeRemaining,
-      });
-
-      // Finalize the whole interview
-      const res = await finalizeInterviewAction(interview.id);
-      if (res.success) {
-        router.push("/reports");
-      } else {
-        alert(res.error || "Failed to finalize report.");
-        setIsEvaluating(false);
-      }
-    } catch (err) {
-      console.error(err);
-      setIsEvaluating(false);
     }
   };
 

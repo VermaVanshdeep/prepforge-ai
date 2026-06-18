@@ -34,9 +34,10 @@ export async function uploadAndAnalyzeResumeAction(rawData: unknown) {
 
   const { name, url, fileKey } = parsed.data;
 
+  let resume: { id: string };
   try {
     // Create the resume database record
-    const resume = await prisma.resume?.create({
+    resume = await prisma.resume.create({
       data: {
         userId: session.user.id,
         name,
@@ -44,18 +45,23 @@ export async function uploadAndAnalyzeResumeAction(rawData: unknown) {
         fileKey,
       },
     });
+  } catch (dbError) {
+    console.error("Database error creating resume record:", dbError);
+    return { error: "Failed to save resume to database. Please try again." };
+  }
 
-    // Run Gemini PDF resume parser. Let errors bubble up to prevent dummy data generation.
+  try {
+    // Run Groq PDF resume parser & AI analysis
     const { rawText, analysis: structuredData } = await analyzeResume(url);
-    
+
     // Update the resume with the raw extracted text
-    await prisma.resume?.update({
+    await prisma.resume.update({
       where: { id: resume.id },
-      data: { rawText }
+      data: { rawText },
     });
 
     // Save the analysis structure
-    const analysis = await prisma.resumeAnalysis?.create({
+    const analysis = await prisma.resumeAnalysis.create({
       data: {
         resumeId: resume.id,
         skills: structuredData.skills,
@@ -68,7 +74,7 @@ export async function uploadAndAnalyzeResumeAction(rawData: unknown) {
     });
 
     // Track usage
-    await prisma.usage?.create({
+    await prisma.usage.create({
       data: {
         userId: session.user.id,
         type: "RESUME_UPLOAD",
@@ -77,9 +83,12 @@ export async function uploadAndAnalyzeResumeAction(rawData: unknown) {
     });
 
     return { success: true, resumeId: resume.id, analysisId: analysis.id };
-  } catch (dbError) {
-    console.error("Database error during resume upload:", dbError);
-    return { error: "Failed to save resume details to database." };
+  } catch (analysisError) {
+    console.error("AI analysis error during resume upload:", analysisError);
+    // Clean up the resume record since analysis failed
+    await prisma.resume.delete({ where: { id: resume.id } }).catch(() => {});
+    const message = analysisError instanceof Error ? analysisError.message : "AI analysis failed.";
+    return { error: message };
   }
 }
 
@@ -93,7 +102,7 @@ export async function deleteResumeAction(resumeId: string) {
   }
 
   try {
-    const resume = await prisma.resume?.findFirst({
+    const resume = await prisma.resume.findFirst({
       where: {
         id: resumeId,
         userId: session.user.id,
@@ -105,7 +114,7 @@ export async function deleteResumeAction(resumeId: string) {
     }
 
     // Delete the resume (cascading deletes analyses/ATS matches)
-    await prisma.resume?.delete({
+    await prisma.resume.delete({
       where: { id: resumeId },
     });
 
@@ -134,7 +143,7 @@ export async function analyzeATSAction(rawData: unknown) {
 
   try {
     // Retrieve resume analysis data
-    const resumeAnalysis = await prisma.resumeAnalysis?.findFirst({
+    const resumeAnalysis = await prisma.resumeAnalysis.findFirst({
       where: {
         resumeId,
         resume: {
@@ -150,7 +159,7 @@ export async function analyzeATSAction(rawData: unknown) {
       return { error: "Resume analysis details not found." };
     }
 
-    // Reconstruct the structure for Gemini
+    // Reconstruct the structure for Groq
     const resumeData: ResumeStructure = {
       skills: resumeAnalysis.skills,
       summary: resumeAnalysis.summary,
@@ -160,11 +169,11 @@ export async function analyzeATSAction(rawData: unknown) {
       certifications: resumeAnalysis.certifications,
     };
 
-    // Run Gemini comparative engine
+    // Run Groq ATS comparative engine
     const result = await analyzeATS(resumeData, jobDescription);
 
     // Save job description and ATS records
-    const jobDescRecord = await prisma.jobDescription?.create({
+    const jobDescRecord = await prisma.jobDescription.create({
       data: {
         userId: session.user.id,
         title: jobTitle,
@@ -172,7 +181,7 @@ export async function analyzeATSAction(rawData: unknown) {
       },
     });
 
-    const atsAnalysis = await prisma.aTSAnalysis?.create({
+    const atsAnalysis = await prisma.aTSAnalysis.create({
       data: {
         resumeId,
         jobDescriptionId: jobDescRecord.id,
@@ -185,7 +194,7 @@ export async function analyzeATSAction(rawData: unknown) {
     });
 
     // Track usage
-    await prisma.usage?.create({
+    await prisma.usage.create({
       data: {
         userId: session.user.id,
         type: "ATS_ANALYSIS",

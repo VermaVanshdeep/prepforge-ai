@@ -67,3 +67,22 @@ To configure Google Sign-In, you need to obtain credentials from the **Google Cl
 ### `GOOGLE_CLIENT_SECRET` (or `AUTH_GOOGLE_SECRET`)
 - **Description:** Google OAuth Client Secret corresponding to the Client ID above.
 - **Example:** `GOCSPX-abc123xyz456_example_secret`
+
+---
+
+## 4. UploadThing Configuration
+
+### `UPLOADTHING_TOKEN`
+- **Description:** Token obtained from UploadThing for handling resume PDF uploads and storage.
+
+---
+
+## 5. AI Service Configuration
+
+### `GEMINI_API_KEY`
+- **Description:** Google Gemini AI API key used for resume analysis, mock interview generation, and evaluation.
+- **How to obtain:** Generate an API Key in the [Google AI Studio](https://aistudio.google.com/).
+
+### `GROQ_API_KEY`
+- **Description:** Groq API key used as an alternative LLM provider.
+- **How to obtain:** Generate an API Key in the [Groq Console](https://console.groq.com/).

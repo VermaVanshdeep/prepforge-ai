@@ -123,7 +123,7 @@ export default function AnalyticsView({ stats, coachData, recentInterviews, hist
           </p>
 
           <div className="max-w-md mx-auto space-y-4">
-            <Link href="/dashboard/resumes" className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 transition-all group">
+            <Link href="/interview" className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 transition-all group">
               <FileText className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
               <span className="text-sm font-medium text-slate-300 group-hover:text-white">Step 1: Upload your resume</span>
             </Link>

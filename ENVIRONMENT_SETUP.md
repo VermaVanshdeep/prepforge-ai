@@ -85,3 +85,8 @@ PrepForge AI is fully optimized for Vercel deployment.
 1. Go to [Google AI Studio](https://aistudio.google.com/).
 2. Generate an API Key.
 3. Set `GEMINI_API_KEY` in your environment variables.
+
+### Groq AI
+1. Go to the [Groq Console](https://console.groq.com/).
+2. Generate an API Key.
+3. Set `GROQ_API_KEY` in your environment variables.

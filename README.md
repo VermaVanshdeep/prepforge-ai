@@ -78,6 +78,7 @@ The application requires the following environment variables. A template is prov
 | `UPLOADTHING_SECRET` | UploadThing server secret for resume uploads. |
 | `UPLOADTHING_APP_ID` | UploadThing application ID. |
 | `GEMINI_API_KEY` | Google Gemini API key for AI generation. |
+| `GROQ_API_KEY` | Groq API key for alternative LLM providers. |
 
 ---
 

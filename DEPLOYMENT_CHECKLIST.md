@@ -15,6 +15,7 @@ Prepare the following variables for Vercel:
 - [ ] `UPLOADTHING_SECRET`
 - [ ] `UPLOADTHING_APP_ID`
 - [ ] `GEMINI_API_KEY`
+- [ ] `GROQ_API_KEY` (if using Groq for AI models)
 
 *Note: `NEXTAUTH_URL` is not strictly required on Vercel as Auth.js automatically detects the canonical URL.*
 

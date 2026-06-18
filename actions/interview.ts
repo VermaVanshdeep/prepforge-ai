@@ -62,7 +62,7 @@ export async function createInterviewAction(rawData: unknown) {
     };
 
     if (resumeId) {
-      const analysis = await prisma.resumeAnalysis?.findFirst({
+      const analysis = await prisma.resumeAnalysis.findFirst({
         where: {
           resumeId,
           resume: { userId: session.user.id },
@@ -89,8 +89,8 @@ export async function createInterviewAction(rawData: unknown) {
       }
     }
 
-    console.log("GEMINI KEY EXISTS:", !!process.env.GEMINI_API_KEY);
-    console.log("--- GEMINI FULL REQUEST TRIGGER ---");
+    console.log("GROQ KEY EXISTS:", !!process.env.GROQ_API_KEY);
+    console.log("--- GROQ FULL REQUEST TRIGGER ---");
     console.log("Calling generateQuestions()");
     
     // Call Gemini generator
@@ -102,8 +102,8 @@ export async function createInterviewAction(rawData: unknown) {
       questionCount
     );
 
-    console.log("--- GEMINI FULL RESPONSE TRIGGERED ---");
-    console.log(`Received ${aiQuestions.length} questions from Gemini.`);
+    console.log("--- GROQ FULL RESPONSE TRIGGERED ---");
+    console.log(`Received ${aiQuestions.length} questions from Groq.`);
 
     // Create the interview and its questions inside a transaction
     type TransactionClient = Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">;
@@ -140,7 +140,7 @@ export async function createInterviewAction(rawData: unknown) {
     });
 
     // Track usage
-    await prisma.usage?.create({
+    await prisma.usage.create({
       data: {
         userId: session.user.id,
         type: "INTERVIEW_GENERATED",
@@ -179,7 +179,7 @@ export async function submitAnswerAction(rawData: unknown) {
 
   try {
     // Verify question and interview ownership
-    const question = await prisma.question?.findFirst({
+    const question = await prisma.question.findFirst({
       where: {
         id: questionId,
         interviewId,
@@ -195,9 +195,9 @@ export async function submitAnswerAction(rawData: unknown) {
     const evaluation = await evaluateAnswer(question.text, question.type, text, codeAnswer);
 
     // Save answer & evaluation results in DB
-    const answer = await prisma.answer?.upsert({
+    const _answer = await prisma.answer.upsert({
       where: {
-        id: (await prisma.answer?.findFirst({
+        id: (await prisma.answer.findFirst({
           where: { questionId, userId: session.user.id },
         }))?.id || "temp-answer-id",
       },
@@ -234,7 +234,7 @@ export async function finalizeInterviewAction(interviewId: string) {
   }
 
   try {
-    const interview = await prisma.interview?.findFirst({
+    const interview = await prisma.interview.findFirst({
       where: {
         id: interviewId,
         userId: session.user.id,
@@ -280,7 +280,7 @@ export async function finalizeInterviewAction(interviewId: string) {
     const reportData = await generateOverallReport(interview.jobTitle, interview.interviewType, qas);
 
     // Save report in DB
-    const report = await prisma.interviewReport?.upsert({
+    const report = await prisma.interviewReport.upsert({
       where: { interviewId },
       create: {
         interviewId,
@@ -302,7 +302,7 @@ export async function finalizeInterviewAction(interviewId: string) {
     });
 
     // Mark interview status as COMPLETED
-    await prisma.interview?.update({
+    await prisma.interview.update({
       where: { id: interviewId },
       data: { status: "COMPLETED" },
     });
