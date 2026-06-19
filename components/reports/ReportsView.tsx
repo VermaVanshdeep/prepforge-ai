@@ -49,6 +49,10 @@ interface ReportItem {
   id: string;
   interviewId: string;
   overallScore: number;
+  completionRate: number;
+  confidenceLevel: string;
+  answeredQuestions: number;
+  skippedQuestions: number;
   summary: string;
   strengths: string[];
   weaknesses: string[];
@@ -158,12 +162,30 @@ export default function ReportsView({ reports }: ReportsViewProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <div className="text-center md:text-right">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Readiness Score</span>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Knowledge Score</span>
               <div className="flex items-baseline justify-center md:justify-end gap-1 mt-1">
-                <span className="text-5xl font-black text-white">{selectedReport.overallScore}</span>
-                <span className="text-sm font-bold text-slate-500">/100</span>
+                <span className="text-5xl font-black text-white">{selectedReport.answeredQuestions === 0 ? "N/A" : selectedReport.overallScore}</span>
+                {selectedReport.answeredQuestions > 0 && <span className="text-sm font-bold text-slate-500">/100</span>}
+              </div>
+            </div>
+            
+            <div className="hidden md:block h-12 w-px bg-white/10" />
+            
+            <div className="text-center md:text-left hidden sm:block">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Completion</span>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="text-3xl font-black text-white">{Math.round(selectedReport.completionRate)}%</span>
+              </div>
+            </div>
+
+            <div className="hidden md:block h-12 w-px bg-white/10" />
+
+            <div className="text-center md:text-left hidden sm:block">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Confidence</span>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className={`text-2xl font-black ${selectedReport.confidenceLevel === "High" ? "text-emerald-400" : selectedReport.confidenceLevel === "Medium" ? "text-amber-400" : selectedReport.confidenceLevel === "Low" ? "text-rose-400" : "text-slate-400"}`}>{selectedReport.confidenceLevel}</span>
               </div>
             </div>
           </div>
@@ -264,14 +286,24 @@ export default function ReportsView({ reports }: ReportsViewProps) {
                           <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Question {index + 1} ({q.type})</span>
                           <p className="text-base font-bold text-white mt-1 leading-relaxed">{q.text}</p>
                         </div>
-                        {ev && (
+                        {ev && (ans?.text || ans?.codeAnswer) ? (
                           <div className="bg-white/5 px-3.5 py-1.5 rounded-xl border border-white/10 text-center shrink-0">
                             <span className="text-xs font-bold text-slate-400 block uppercase">Score</span>
                             <span className="text-lg font-black text-white">{ev.overallScore || 0}</span>
                           </div>
+                        ) : (
+                          <div className="bg-rose-500/10 px-3.5 py-1.5 rounded-xl border border-rose-500/20 text-center shrink-0">
+                            <span className="text-xs font-bold text-rose-400 block uppercase">Status</span>
+                            <span className="text-sm font-black text-rose-400">Skipped</span>
+                          </div>
                         )}
                       </div>
                       <div className="p-6 space-y-5">
+                        {!ans?.text && !ans?.codeAnswer && (
+                           <div>
+                             <p className="text-sm text-slate-500 italic">No response was submitted for this question. It was not evaluated.</p>
+                           </div>
+                        )}
                         {ans?.text && (
                           <div>
                             <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">YOUR RESPONSE</h4>
@@ -408,10 +440,10 @@ export default function ReportsView({ reports }: ReportsViewProps) {
 
                 <div className="flex items-center gap-6">
                   <div className="text-left sm:text-right">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Ready Score</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Knowledge Score</span>
                     <div className="flex items-baseline gap-0.5 mt-0.5">
-                      <span className="text-2xl font-black text-white">{report.overallScore}</span>
-                      <span className="text-[10px] font-bold text-slate-500">/100</span>
+                      <span className="text-2xl font-black text-white">{report.answeredQuestions === 0 ? "N/A" : report.overallScore}</span>
+                      {report.answeredQuestions > 0 && <span className="text-[10px] font-bold text-slate-500">/100</span>}
                     </div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />

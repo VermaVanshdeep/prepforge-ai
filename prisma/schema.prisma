@@ -129,17 +129,21 @@ model Answer {
 }
 
 model InterviewReport {
-  id             String    @id @default(cuid())
-  interviewId    String    @unique
-  overallScore   Int
-  summary        String    @db.Text
-  strengths      String[]
-  weaknesses     String[]
-  recommendations String[]
-  skillBreakdown Json      @default("{}") // Skill-by-skill metrics
-  createdAt      DateTime  @db.Timestamp(6) @default(now())
+  id               String    @id @default(cuid())
+  interviewId      String    @unique
+  overallScore     Int
+  completionRate   Float     @default(0)
+  confidenceLevel  String    @default("None")
+  answeredQuestions Int      @default(0)
+  skippedQuestions  Int      @default(0)
+  summary          String    @db.Text
+  strengths        String[]
+  weaknesses       String[]
+  recommendations  String[]
+  skillBreakdown   Json      @default("{}") // Skill-by-skill metrics
+  createdAt        DateTime  @db.Timestamp(6) @default(now())
 
-  interview      Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  interview        Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
 }
 
 model Usage {

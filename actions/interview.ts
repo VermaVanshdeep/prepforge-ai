@@ -259,6 +259,8 @@ export async function finalizeInterviewAction(interviewId: string) {
       return { error: "Interview session not found." };
     }
 
+    const totalQuestions = interview.questions.length;
+    
     const qas = interview.questions.map((q: QuestionWithAnswers) => {
       const ans: Answer | undefined = q.answers[0];
       const evaluation: AnswerEvaluation = (ans?.evaluation as unknown as AnswerEvaluation) || {
@@ -281,15 +283,51 @@ export async function finalizeInterviewAction(interviewId: string) {
       };
     });
 
-    // Run overall report generator using Gemini
-    const reportData = await generateOverallReport(interview.jobTitle, interview.interviewType, qas);
+    const answeredQuestionsArr = qas.filter(
+      q => q.answer.trim().length > 0 || (q.codeAnswer?.trim().length ?? 0) > 0
+    );
+    const answeredQuestions = answeredQuestionsArr.length;
+    const skippedQuestions = totalQuestions - answeredQuestions;
+
+    const completionRate = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+    
+    let confidenceLevel = "None";
+    if (completionRate >= 80) confidenceLevel = "High";
+    else if (completionRate >= 40) confidenceLevel = "Medium";
+    else if (completionRate > 0) confidenceLevel = "Low";
+
+    let reportData;
+    let knowledgeScore = 0;
+
+    if (answeredQuestions === 0) {
+      reportData = {
+        overallScore: 0,
+        summary: "No answers were submitted. A performance assessment cannot be generated.",
+        strengths: [],
+        weaknesses: ["Insufficient response data available."],
+        recommendations: ["Complete an interview to receive a personalized study plan."],
+        skillBreakdown: {},
+      };
+    } else {
+      const totalScore = answeredQuestionsArr.reduce((sum, q) => sum + (q.eval.overallScore || 0), 0);
+      knowledgeScore = Math.round(totalScore / answeredQuestions);
+      
+      // Run overall report generator using Gemini (passing only answered questions)
+      reportData = await generateOverallReport(interview.jobTitle, interview.interviewType, answeredQuestionsArr);
+      // Override the overall score with the exactly calculated knowledge score from answered questions
+      reportData.overallScore = knowledgeScore;
+    }
 
     // Save report in DB
     const report = await prisma.interviewReport.upsert({
       where: { interviewId },
       create: {
         interviewId,
-        overallScore: reportData.overallScore,
+        overallScore: reportData.overallScore, // Treats as knowledgeScore
+        completionRate,
+        confidenceLevel,
+        answeredQuestions,
+        skippedQuestions,
         summary: reportData.summary,
         strengths: reportData.strengths,
         weaknesses: reportData.weaknesses,
@@ -298,6 +336,10 @@ export async function finalizeInterviewAction(interviewId: string) {
       },
       update: {
         overallScore: reportData.overallScore,
+        completionRate,
+        confidenceLevel,
+        answeredQuestions,
+        skippedQuestions,
         summary: reportData.summary,
         strengths: reportData.strengths,
         weaknesses: reportData.weaknesses,

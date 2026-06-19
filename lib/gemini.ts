@@ -401,8 +401,13 @@ export async function generateOverallReport(
 JOB TITLE: ${jobTitle}
 TYPE: ${interviewType}
 
-TRANSCRIPT:
+TRANSCRIPT (ANSWERED QUESTIONS ONLY):
 ${transcript}
+
+CRITICAL RULES:
+- The transcript contains ONLY the answered questions. Do not infer skill gaps or weaknesses for questions that were not answered.
+- Generate strengths and weaknesses SOLELY based on the provided answers.
+- If the transcript is very short, include "Insufficient response data available" as a weakness.
 
 Compute the overall average score, compile strengths, weaknesses, recommendations, and a skill breakdown. Return a JSON object:
 {

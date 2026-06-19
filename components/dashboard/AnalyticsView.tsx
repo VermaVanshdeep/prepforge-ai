@@ -50,6 +50,10 @@ interface RecentInterviewItem {
   difficulty: string;
   report?: {
     overallScore: number;
+    completionRate: number;
+    confidenceLevel: string;
+    answeredQuestions: number;
+    skippedQuestions: number;
     summary: string;
     strengths: string[];
     weaknesses: string[];
@@ -219,12 +223,36 @@ export default function AnalyticsView({ stats, coachData, recentInterviews, hist
               <History className="w-3 h-3 text-primary" /> Latest Result
             </h3>
             
-            <div className="flex items-end gap-3 mb-6">
-              <span className="text-5xl font-black text-white leading-none">{rep.overallScore}</span>
-              <span className="text-sm text-slate-500 font-bold pb-1">/ 100</span>
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="bg-slate-950/40 p-5 rounded-2xl border border-white/5 flex-1 shadow-inner relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-all"></div>
+                <div className="flex items-center gap-3 mb-3 relative">
+                  <div className="p-2 bg-indigo-500/20 rounded-xl">
+                    <Target className="h-5 w-5 text-indigo-400" />
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Knowledge Score</h4>
+                </div>
+                <div className="flex items-baseline gap-1.5 relative mt-2">
+                  <span className="text-5xl font-black text-white leading-none">{rep.answeredQuestions === 0 ? "N/A" : rep.overallScore}</span>
+                  {rep.answeredQuestions > 0 && <span className="text-sm font-bold text-slate-500">/100</span>}
+                </div>
+              </div>
+
+              <div className="bg-slate-950/40 p-5 rounded-2xl border border-white/5 flex-1 shadow-inner relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
+                <div className="flex items-center gap-3 mb-3 relative">
+                  <div className="p-2 bg-emerald-500/20 rounded-xl">
+                    <History className="h-5 w-5 text-emerald-400" />
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Completion</h4>
+                </div>
+                <div className="flex items-baseline gap-1.5 relative mt-2">
+                  <span className="text-5xl font-black text-white leading-none">{Math.round(rep.completionRate)}%</span>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-4 flex-1">
+            <div className="space-y-4 flex-1 mt-6">
               <div className="flex justify-between items-center pb-3 border-b border-white/5">
                 <span className="text-xs text-slate-400 font-medium">Type</span>
                 <span className="text-xs font-bold text-white bg-white/5 px-2 py-1 rounded-md">{latest.interviewType.replace('_', ' ')}</span>
