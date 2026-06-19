@@ -29,7 +29,7 @@ export async function uploadAndAnalyzeResumeAction(rawData: unknown) {
 
   const parsed = resumeUploadSchema.safeParse(rawData);
   if (!parsed.success) {
-    return { error: parsed.error.issues.map(i => i.message).join(", ") };
+    return { error: parsed.error.issues.map((i: z.ZodIssue) => i.message).join(", ") };
   }
 
   const { name, url, fileKey } = parsed.data;
@@ -136,7 +136,7 @@ export async function analyzeATSAction(rawData: unknown) {
 
   const parsed = atsAnalysisSchema.safeParse(rawData);
   if (!parsed.success) {
-    return { error: parsed.error.issues.map(i => i.message).join(", ") };
+    return { error: parsed.error.issues.map((i: z.ZodIssue) => i.message).join(", ") };
   }
 
   const { resumeId, jobTitle, jobDescription } = parsed.data;

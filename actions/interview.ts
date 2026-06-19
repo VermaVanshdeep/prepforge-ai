@@ -5,6 +5,10 @@ import { auth } from "@/lib/auth";
 import { z } from "zod";
 import { generateQuestions, evaluateAnswer, generateOverallReport } from "@/lib/gemini";
 import type { ResumeStructure, AnswerEvaluation } from "@/lib/gemini";
+import type { Prisma, Question, Answer } from "@prisma/client";
+
+// Type for a Question with its nested answers (from Prisma include)
+type QuestionWithAnswers = Question & { answers: Answer[] };
 
 const createInterviewSchema = z.object({
   resumeId: z.string().optional(),
@@ -38,7 +42,7 @@ export async function createInterviewAction(rawData: unknown) {
   const parsed = createInterviewSchema.safeParse(rawData);
   if (!parsed.success) {
     console.error("Zod Validation Failed:", parsed.error.issues);
-    return { error: parsed.error.issues.map(i => i.message).join(", ") };
+    return { error: parsed.error.issues.map((i: z.ZodIssue) => i.message).join(", ") };
   }
 
   const { resumeId, jobTitle, jobDescription, interviewType, difficulty, questionCount } = parsed.data;
@@ -106,8 +110,7 @@ export async function createInterviewAction(rawData: unknown) {
     console.log(`Received ${aiQuestions.length} questions from Groq.`);
 
     // Create the interview and its questions inside a transaction
-    type TransactionClient = Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">;
-    const interview = await prisma.$transaction(async (tx: TransactionClient) => {
+    const interview = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const interviewRecord = await tx.interview.create({
         data: {
           userId: session.user.id,
@@ -121,15 +124,15 @@ export async function createInterviewAction(rawData: unknown) {
         },
       });
 
-      const questionsData = aiQuestions.map((q, idx) => ({
+      const questionsData = aiQuestions.map((q: { text: string; category?: string; type?: string; codeTemplate?: string | null; codeLanguage?: string | null; testCases?: unknown }, idx: number) => ({
         interviewId: interviewRecord.id,
         text: q.text,
-        category: (q as { category?: string }).category || null,
+        category: q.category || null,
         order: idx,
         type: q.type || "TEXT",
         codeTemplate: q.codeTemplate || null,
         codeLanguage: q.codeLanguage || null,
-        testCases: q.testCases ? (q.testCases as never) : undefined,
+        testCases: q.testCases ? (q.testCases as Prisma.InputJsonValue) : undefined,
       }));
 
       await tx.question.createMany({
@@ -172,7 +175,7 @@ export async function submitAnswerAction(rawData: unknown) {
 
   const parsed = submitAnswerSchema.safeParse(rawData);
   if (!parsed.success) {
-    return { error: parsed.error.issues.map(i => i.message).join(", ") };
+    return { error: parsed.error.issues.map((i: z.ZodIssue) => i.message).join(", ") };
   }
 
   const { interviewId, questionId, text, codeAnswer, duration } = parsed.data;
@@ -254,8 +257,8 @@ export async function finalizeInterviewAction(interviewId: string) {
       return { error: "Interview session not found." };
     }
 
-    const qas = interview.questions.map((q) => {
-      const ans = q.answers[0];
+    const qas = interview.questions.map((q: QuestionWithAnswers) => {
+      const ans: Answer | undefined = q.answers[0];
       const evaluation: AnswerEvaluation = (ans?.evaluation as unknown as AnswerEvaluation) || {
         technicalAccuracy: 0,
         communication: 0,
