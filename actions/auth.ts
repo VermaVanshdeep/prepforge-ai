@@ -21,11 +21,12 @@ export async function registerUser(data: unknown) {
 
   try {
     // Check if user already exists
-    const existingUser = await prisma.user?.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
     });
 
     if (existingUser) {
+      console.warn(`[REGISTER] User already exists: ${email}`);
       return { error: "An account with this email already exists." };
     }
 
@@ -33,13 +34,15 @@ export async function registerUser(data: unknown) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user record in PostgreSQL
-    const user = await prisma.user?.create({
+    const user = await prisma.user.create({
       data: {
         name,
         email: email.toLowerCase(),
         password: hashedPassword,
       },
     });
+    
+    console.log(`[REGISTER] Successfully created user: ${user.id} (${user.email})`);
 
     return { 
       success: true, 
@@ -50,8 +53,10 @@ export async function registerUser(data: unknown) {
       }
     };
   } catch (error) {
-    console.error("Registration error:", error);
-    return { error: "Failed to register user. Please try again later." };
+    console.error("[REGISTER] Registration error:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to register user. Please try again later." 
+    };
   }
 }
 
@@ -95,7 +100,7 @@ export async function loginUser(data: unknown) {
       }
     }
 
-    // Rethrow any truly unexpected errors (not auth failures, not redirects)
+    console.error("[LOGIN] Uncaught error during login:", error);
     throw error;
   }
 }

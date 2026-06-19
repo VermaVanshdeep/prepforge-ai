@@ -46,8 +46,10 @@ export async function uploadAndAnalyzeResumeAction(rawData: unknown) {
       },
     });
   } catch (dbError) {
-    console.error("Database error creating resume record:", dbError);
-    return { error: "Failed to save resume to database. Please try again." };
+    console.error("[RESUME] Database error creating resume record:", dbError);
+    return { 
+      error: dbError instanceof Error ? dbError.message : "Failed to save resume to database. Please try again." 
+    };
   }
 
   try {
@@ -120,8 +122,10 @@ export async function deleteResumeAction(resumeId: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to delete resume:", error);
-    return { error: "Failed to delete resume. Please try again." };
+    console.error("[RESUME] Failed to delete resume:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to delete resume. Please try again." 
+    };
   }
 }
 
@@ -209,7 +213,9 @@ export async function analyzeATSAction(rawData: unknown) {
       data: result,
     };
   } catch (error) {
-    console.error("ATS Analysis engine failed:", error);
-    return { error: "Failed to complete ATS matching analysis." };
+    console.error("[RESUME] ATS Analysis engine failed:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to complete ATS matching analysis." 
+    };
   }
 }

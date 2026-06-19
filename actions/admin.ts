@@ -74,7 +74,9 @@ export async function getAdminMetrics(): Promise<{ error?: string; metrics?: Adm
       },
     };
   } catch (error) {
-    console.error("Admin metrics compilation error:", error);
-    return { error: "Failed to gather administrative data." };
+    console.error("[ADMIN] Admin metrics compilation error:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to gather administrative data." 
+    };
   }
 }

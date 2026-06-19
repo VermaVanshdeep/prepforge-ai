@@ -222,8 +222,10 @@ export async function submitAnswerAction(rawData: unknown) {
 
     return { success: true, evaluation };
   } catch (error) {
-    console.error("Failed to save and evaluate answer:", error);
-    return { error: "Failed to submit answer. Please try again." };
+    console.error("[INTERVIEW] Failed to save and evaluate answer:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to submit answer. Please try again." 
+    };
   }
 }
 
@@ -312,7 +314,9 @@ export async function finalizeInterviewAction(interviewId: string) {
 
     return { success: true, reportId: report.id };
   } catch (error) {
-    console.error("Failed to finalize interview report:", error);
-    return { error: "Failed to compile the report." };
+    console.error("[INTERVIEW] Failed to finalize interview report:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to compile the report." 
+    };
   }
 }

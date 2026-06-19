@@ -20,14 +20,14 @@ export async function updateProfile(rawData: unknown) {
 
   const parsed = updateProfileSchema.safeParse(rawData);
   if (!parsed.success) {
-    return { error: parsed.error.issues.map(i => i.message).join(", ") };
+    return { error: parsed.error.issues.map((i: z.ZodIssue) => i.message).join(", ") };
   }
 
   const { name, email } = parsed.data;
 
   try {
     // Check if email is already taken by another user
-    const existingUser = await prisma.user?.findFirst({
+    const existingUser = await prisma.user.findFirst({
       where: {
         email: email.toLowerCase(),
         NOT: { id: session.user.id },
@@ -38,7 +38,7 @@ export async function updateProfile(rawData: unknown) {
       return { error: "This email address is already in use." };
     }
 
-    await prisma.user?.update({
+    await prisma.user.update({
       where: { id: session.user.id },
       data: {
         name,
@@ -48,7 +48,9 @@ export async function updateProfile(rawData: unknown) {
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to update profile settings:", error);
-    return { error: "Failed to update account details." };
+    console.error("[PROFILE] Failed to update profile settings:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to update account details." 
+    };
   }
 }
